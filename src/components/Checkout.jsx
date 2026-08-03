@@ -91,7 +91,7 @@ export default function Checkout() {
       return;
     }
 
-    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_TKaii6Z6qi3jxW';
+    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_TLLzVZGrkIdhc1';
 
     const options = {
       key: razorpayKey,
