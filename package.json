@@ -1,5 +1,5 @@
 {
-  "name": "spyder-sec",
+  "name": "spyrewall",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "firebase": "^12.17.0",
     "framer-motion": "^11.0.0",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",

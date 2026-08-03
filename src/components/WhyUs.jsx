@@ -127,7 +127,7 @@ export default function WhyUs({ showVisual = true }) {
                   className="w-full h-full"
                   style={{
                     background:
-                      'conic-gradient(from 0deg, transparent 0%, rgba(255, 0, 0, 0.1) 80%, rgba(255, 0, 0, 0.8) 100%)',
+                      'conic-gradient(from 0deg, transparent 0%, rgba(255, 255, 255, 0.1) 80%, rgba(255, 255, 255, 0.95) 100%)',
                     willChange: 'transform',
                   }}
                   animate={{ rotate: 360 }}
@@ -142,9 +142,9 @@ export default function WhyUs({ showVisual = true }) {
                 animate={{
                   scale: [1, 1.05, 1],
                   filter: [
-                    'drop-shadow(0 0 30px rgba(255,30,30,0.6))',
+                    'drop-shadow(0 0 30px rgba(255,255,255,0.7))',
                     'drop-shadow(0 0 50px rgba(59,130,246,0.9))',
-                    'drop-shadow(0 0 30px rgba(255,30,30,0.6))',
+                    'drop-shadow(0 0 30px rgba(255,255,255,0.7))',
                   ],
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
@@ -173,7 +173,7 @@ export default function WhyUs({ showVisual = true }) {
               className="mb-10 text-lg pl-4"
               style={{ color: 'hsl(0 0% 65%)', borderLeft: '2px solid hsl(217 91% 60% / 0.5)' }}
             >
-              Most firms either train you or test your systems. Spyder Sec does both — turning learners into
+              Most firms either train you or test your systems. Spyrewall does both — turning learners into
               defenders and defenders into offensive experts, all under one roof.
             </p>
 

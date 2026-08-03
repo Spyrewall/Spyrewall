@@ -6,7 +6,8 @@ import {
 } from 'lucide-react'
 import { CURATED_POSTINGS } from '../data/postings'
 
-const STORAGE_KEY = 'spyder_sec_postings'
+const STORAGE_KEY = 'spyrewall_postings'
+const LEGACY_STORAGE_KEY = 'spyder_sec_postings'
 const ADMIN_EMAIL = 'Spyrewall@gmail.com'
 const ADMIN_WHATSAPP = '917665140660'
 
@@ -33,6 +34,10 @@ const OPTIONS = [
 
 function loadPostings() {
   try {
+    if (!localStorage.getItem(STORAGE_KEY) && localStorage.getItem(LEGACY_STORAGE_KEY)) {
+      localStorage.setItem(STORAGE_KEY, localStorage.getItem(LEGACY_STORAGE_KEY))
+      localStorage.removeItem(LEGACY_STORAGE_KEY)
+    }
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
   } catch {
     return []

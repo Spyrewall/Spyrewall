@@ -1,35 +1,11 @@
 import { motion } from 'framer-motion'
-import { BadgeCheck } from 'lucide-react'
-
-const certs = [
-  {
-    name: 'Introduction To Operating System',
-    full: 'Foundations of OS concepts and architecture',
-    body: 'Spyrewall',
-  },
-  {
-    name: 'Basic Fundamentals of Cyber Security',
-    full: 'Beginner friendly for people who want to start their journey in cyber security.',
-    body: 'Spyrewall',
-  },
-  {
-    name: 'Programming Languages',
-    full: 'Learn essential programming languages used in cybersecurity and ethical hacking.',
-    body: 'Spyrewall',
-  },
-  {
-    name: 'SOC Analyst',
-    full: 'Security Operations Center analyst skills, threat monitoring and incident response.',
-    body: 'Spyrewall',
-  },
-  {
-    name: 'Penetration Testing',
-    full: 'Ethical hacking and penetration testing methodologies for real-world assessments.',
-    body: 'Spyrewall',
-  },
-]
+import { BadgeCheck, ShoppingCart, Check, Clock, BookOpen, BarChart3 } from 'lucide-react'
+import { COURSES, formatPrice } from '../data/courses'
+import { useCart } from '../context/CartContext'
 
 export default function Certifications() {
+  const { addItem, isInCart } = useCart()
+
   return (
     <section id="certifications" className="py-24 relative overflow-hidden" style={{ backgroundColor: 'hsl(0 0% 12%)' }}>
       <div className="absolute inset-0 cyber-grid pointer-events-none" style={{ opacity: 0.1 }} />
@@ -50,45 +26,103 @@ export default function Certifications() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {certs.map((cert, i) => (
-            <motion.div
-              key={cert.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="cyber-clip p-6 transition-all duration-300 group"
-              style={{
-                backgroundColor: 'hsl(0 0% 4%)',
-                border: '1px solid hsl(0 0% 15%)',
-              }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = 'hsl(217 91% 60% / 0.5)'}
-              onMouseLeave={e => e.currentTarget.style.borderColor = 'hsl(0 0% 15%)'}
-            >
-              <div className="flex items-start gap-4">
-                <div
-                  className="w-12 h-12 flex items-center justify-center rounded-full shrink-0 transition-all duration-300"
-                  style={{ backgroundColor: 'hsl(217 91% 60% / 0.1)', border: '1px solid hsl(217 91% 60% / 0.3)' }}
-                >
-                  <BadgeCheck className="w-6 h-6" style={{ color: 'hsl(217 91% 60%)' }} />
-                </div>
-                <div>
-                  <h3 className="font-display font-bold uppercase tracking-wide mb-2 text-sm" style={{ color: 'hsl(0 0% 98%)' }}>
-                    {cert.name}
-                  </h3>
-                  <p className="text-xs leading-relaxed mb-3" style={{ color: 'hsl(0 0% 65%)' }}>
-                    {cert.full}
-                  </p>
-                  <span
-                    className="inline-block text-xs font-mono uppercase tracking-widest px-2 py-1"
-                    style={{ backgroundColor: 'hsl(217 91% 60% / 0.1)', color: 'hsl(217 91% 60%)', border: '1px solid hsl(217 91% 60% / 0.3)' }}
+          {COURSES.map((cert, i) => {
+            const inCart = isInCart(cert.id)
+            const discount = Math.round(((cert.originalPrice - cert.price) / cert.originalPrice) * 100)
+            
+            return (
+              <motion.div
+                key={cert.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="cyber-clip p-6 transition-all duration-300 group flex flex-col h-full"
+                style={{
+                  backgroundColor: 'hsl(0 0% 4%)',
+                  border: '1px solid hsl(0 0% 15%)',
+                }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = 'hsl(217 91% 60% / 0.5)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = 'hsl(0 0% 15%)'}
+              >
+                <div className="flex items-start gap-4 mb-6">
+                  <div
+                    className="w-12 h-12 flex items-center justify-center rounded-full shrink-0 transition-all duration-300"
+                    style={{ backgroundColor: 'hsl(217 91% 60% / 0.1)', border: '1px solid hsl(217 91% 60% / 0.3)' }}
                   >
-                    {cert.body}
+                    <BadgeCheck className="w-6 h-6" style={{ color: 'hsl(217 91% 60%)' }} />
+                  </div>
+                  <div>
+                    <h3 className="font-display font-bold uppercase tracking-wide mb-2 text-sm" style={{ color: 'hsl(0 0% 98%)' }}>
+                      {cert.name}
+                    </h3>
+                    <p className="text-xs leading-relaxed" style={{ color: 'hsl(0 0% 65%)' }}>
+                      {cert.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <span className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest px-2 py-1" style={{ backgroundColor: 'hsl(0 0% 12%)', color: 'hsl(0 0% 65%)' }}>
+                    <Clock className="w-3 h-3" /> {cert.duration}
+                  </span>
+                  <span className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest px-2 py-1" style={{ backgroundColor: 'hsl(0 0% 12%)', color: 'hsl(0 0% 65%)' }}>
+                    <BarChart3 className="w-3 h-3" /> {cert.level}
+                  </span>
+                  <span className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest px-2 py-1" style={{ backgroundColor: 'hsl(0 0% 12%)', color: 'hsl(0 0% 65%)' }}>
+                    <BookOpen className="w-3 h-3" /> {cert.modules} Mods
                   </span>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+
+                <div className="mt-auto">
+                  <div className="flex items-center justify-between mb-6">
+                    <span
+                      className="inline-block text-[10px] font-mono uppercase tracking-widest px-2 py-1"
+                      style={{ backgroundColor: 'hsl(217 91% 60% / 0.1)', color: 'hsl(217 91% 60%)', border: '1px solid hsl(217 91% 60% / 0.3)' }}
+                    >
+                      {cert.provider}
+                    </span>
+                    <div className="text-right flex flex-col">
+                      <div className="flex items-center gap-2 justify-end mb-0.5">
+                        <span className="text-[10px] line-through" style={{ color: 'hsl(0 0% 40%)' }}>
+                          {formatPrice(cert.originalPrice)}
+                        </span>
+                        <span className="text-[9px] font-bold px-1 py-0.5 rounded-sm" style={{ backgroundColor: 'hsl(142 71% 45% / 0.1)', color: 'hsl(142 71% 45%)' }}>
+                          {discount}% OFF
+                        </span>
+                      </div>
+                      <span className="text-lg font-bold font-mono" style={{ color: 'hsl(0 0% 98%)' }}>
+                        {formatPrice(cert.price)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => !inCart && addItem(cert)}
+                    disabled={inCart}
+                    className="w-full py-3 px-4 flex items-center justify-center gap-2 cyber-clip-button font-mono uppercase tracking-widest text-xs transition-all duration-300"
+                    style={{
+                      backgroundColor: inCart ? 'hsl(142 71% 45% / 0.1)' : 'hsl(217 91% 60% / 0.1)',
+                      color: inCart ? 'hsl(142 71% 45%)' : 'hsl(217 91% 60%)',
+                      border: `1px solid ${inCart ? 'hsl(142 71% 45% / 0.3)' : 'hsl(217 91% 60% / 0.3)'}`,
+                      cursor: inCart ? 'default' : 'pointer',
+                      opacity: inCart ? 0.8 : 1
+                    }}
+                  >
+                    {inCart ? (
+                      <>
+                        <Check className="w-4 h-4" /> IN CART
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="w-4 h-4" /> ADD TO CART
+                      </>
+                    )}
+                  </button>
+                </div>
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>

@@ -1,10 +1,16 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageSquare, X, Send } from 'lucide-react'
+import { MessageSquare, X, Send, LifeBuoy, Star } from 'lucide-react'
 
 const WHATSAPP_URL = 'https://wa.me/917665140660?text=Hello%2C%20I%20am%20interested%20to%20Enquire%20About%20Spyrewall'
 
+export function triggerChatBot(topic) {
+  window.dispatchEvent(new CustomEvent('open-spyrewall-chat', { detail: { topic } }))
+}
+
 const QUICK_REPLIES = [
+  { id: 'ticket', label: 'Raise a Support Ticket 🎫' },
+  { id: 'feedback', label: 'Share Feedback / Review ⭐' },
   { id: 'services', label: 'What services do you offer?' },
   { id: 'training', label: 'Tell me about training & certifications' },
   { id: 'pentest', label: 'I need a penetration test' },
@@ -12,19 +18,39 @@ const QUICK_REPLIES = [
 ]
 
 const BOT_REPLIES = {
+  ticket: "🎫 **SUPPORT TICKET PROTOCOL**\n\nTo raise an urgent ticket, type your name, email, issue priority (Critical/High/Medium/Low), and description here — or connect directly with our 24/7 incident response team on WhatsApp below!",
+  feedback: "⭐ **SHARE YOUR EXPERIENCE**\n\nWe value your feedback! Type your rating (1 to 5 stars) and review here, or chat with our team on WhatsApp to share your experience with Spyrewall.",
   services: "We offer two main lines of work:\n\n• Cybersecurity Training & Certifications — hands-on courses with cyber ranges and live labs.\n• Penetration Testing & Security Audits — real-world offensive testing for companies.\n\nWant details on a specific area?",
   training: "Our training programs are led by industry-certified mentors (active pen testers, auditors, CTF champs). Every course pairs theory with live labs and CTF challenges you can put on a resume. Check the Certifications page for the full list.",
   pentest: "Great — our pen-testing engagements are scoped to your environment (web apps, networks, cloud, internal). We deliver a clear report with reproduction steps and remediation guidance.\n\nThe fastest way to start is a quick chat — tap the button below to message us on WhatsApp.",
-  contact: "You can reach us anytime:\n\n📞 +91 7665140660\n✉️ Spyrewall@gmail.com\n💬 WhatsApp: tap the button below\n\nWe usually reply within a few hours.",
+  contact: "You can reach us anytime:\n\n📞 +91 7665140660\n✉️ Spyrewall@gmail.com\n💬 WhatsApp: tap the button below\n\nWe usually reply within a few minutes.",
 }
 
 export default function ChatBox() {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState([
-    { from: 'bot', text: "Hi! I'm Spyder Bot 🕷️ — ask me about our training, pen-testing services, or how to get in touch." },
+    { from: 'bot', text: "Hi! I'm Spyrewall Bot 🕷️ — raise a support ticket, share feedback, or ask about our cybersecurity services!" },
   ])
   const [input, setInput] = useState('')
   const scrollRef = useRef(null)
+
+  useEffect(() => {
+    const handleOpenEvent = (e) => {
+      setOpen(true)
+      const topic = e.detail?.topic
+      if (topic && BOT_REPLIES[topic]) {
+        const replyObj = QUICK_REPLIES.find(r => r.id === topic)
+        const userLabel = replyObj ? replyObj.label : 'Support Request'
+        setMessages(prev => [
+          ...prev,
+          { from: 'user', text: userLabel },
+          { from: 'bot', text: BOT_REPLIES[topic] }
+        ])
+      }
+    }
+    window.addEventListener('open-spyrewall-chat', handleOpenEvent)
+    return () => window.removeEventListener('open-spyrewall-chat', handleOpenEvent)
+  }, [])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -52,7 +78,7 @@ export default function ChatBox() {
     setTimeout(() => {
       setMessages(prev => [...prev, {
         from: 'bot',
-        text: "Thanks! For a detailed answer, our team can reply directly on WhatsApp — tap the green button below to continue the conversation there.",
+        text: "Message logged! For immediate response or direct engineer assistance, tap the green button below to continue on WhatsApp.",
       }])
     }, 500)
   }
@@ -126,7 +152,7 @@ export default function ChatBox() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-display font-bold text-sm uppercase tracking-widest" style={{ color: 'hsl(0 0% 98%)' }}>
-                  Spyder Bot
+                  Spyrewall Bot
                 </div>
                 <div className="text-[10px] font-mono uppercase tracking-widest" style={{ color: '#22c55e' }}>
                   ● Online
@@ -159,28 +185,26 @@ export default function ChatBox() {
                 </motion.div>
               ))}
 
-              {/* Quick replies — only show at the start */}
-              {messages.length <= 1 && (
-                <div className="pt-2 flex flex-wrap gap-2">
-                  {QUICK_REPLIES.map(qr => (
-                    <button
-                      key={qr.id}
-                      onClick={() => handleQuickReply(qr)}
-                      className="px-3 py-1.5 text-xs uppercase tracking-wider font-mono transition-all"
-                      style={{
-                        backgroundColor: 'transparent',
-                        color: 'hsl(217 91% 70%)',
-                        border: '1px solid hsl(217 91% 60% / 0.4)',
-                        borderRadius: '999px',
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'hsl(217 91% 60% / 0.15)'; e.currentTarget.style.borderColor = 'hsl(217 91% 60%)' }}
-                      onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = 'hsl(217 91% 60% / 0.4)' }}
-                    >
-                      {qr.label}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {/* Quick replies */}
+              <div className="pt-2 flex flex-wrap gap-2">
+                {QUICK_REPLIES.map(qr => (
+                  <button
+                    key={qr.id}
+                    onClick={() => handleQuickReply(qr)}
+                    className="px-3 py-1.5 text-xs uppercase tracking-wider font-mono transition-all"
+                    style={{
+                      backgroundColor: 'transparent',
+                      color: 'hsl(217 91% 70%)',
+                      border: '1px solid hsl(217 91% 60% / 0.4)',
+                      borderRadius: '999px',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'hsl(217 91% 60% / 0.15)'; e.currentTarget.style.borderColor = 'hsl(217 91% 60%)' }}
+                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = 'hsl(217 91% 60% / 0.4)' }}
+                  >
+                    {qr.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* WhatsApp CTA */}
@@ -214,9 +238,9 @@ export default function ChatBox() {
                 className="flex-1 px-3 py-2 text-sm outline-none"
                 style={{
                   backgroundColor: 'hsl(0 0% 12%)',
-                  color: 'hsl(0 0% 92%)',
                   border: '1px solid hsl(0 0% 20%)',
                   borderRadius: '6px',
+                  color: 'hsl(0 0% 92%)',
                 }}
                 onFocus={e => e.currentTarget.style.borderColor = 'hsl(217 91% 60% / 0.6)'}
                 onBlur={e => e.currentTarget.style.borderColor = 'hsl(0 0% 20%)'}

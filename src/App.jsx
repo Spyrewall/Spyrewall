@@ -9,10 +9,12 @@ import Stats from './components/Stats'
 import WhyUs from './components/WhyUs'
 import Team from './components/Team'
 import Gallery from './components/Gallery'
+import FAQ from './components/FAQ'
 import Support from './components/Support'
-import Feedback from './components/Feedback'
 import Footer from './components/Footer'
 import ChatBox from './components/ChatBox'
+import Cart from './components/Cart'
+import Checkout from './components/Checkout'
 
 function Home() {
   return (
@@ -20,6 +22,7 @@ function Home() {
       <Hero />
       <Stats />
       <WhyUs />
+      <FAQ />
     </>
   )
 }
@@ -42,8 +45,9 @@ export default function App() {
           <Route path="/team" element={<PageWrapper><Team /></PageWrapper>} />
           <Route path="/gallery" element={<PageWrapper><Gallery /></PageWrapper>} />
           <Route path="/support" element={<PageWrapper><Support /></PageWrapper>} />
-          <Route path="/feedback" element={<PageWrapper><Feedback /></PageWrapper>} />
           <Route path="/admin" element={<PageWrapper><Admin /></PageWrapper>} />
+          <Route path="/cart" element={<PageWrapper><Cart /></PageWrapper>} />
+          <Route path="/checkout" element={<PageWrapper><Checkout /></PageWrapper>} />
         </Routes>
       </main>
       <Footer />

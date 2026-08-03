@@ -23,7 +23,6 @@ const links = [
   { name: 'Team', to: '/team' },
   { name: 'Photo Gallery', to: '/gallery' },
   { name: 'Support', to: '/support' },
-  { name: 'Feedback', to: '/feedback' },
 ]
 
 export default function Footer() {

@@ -2,12 +2,19 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Lock, ShieldCheck, Check, X, Trash2, Inbox, MapPin, Mail, Phone, Building2, IndianRupee, Users, Clock, Briefcase, Info } from 'lucide-react'
 
-const STORAGE_KEY = 'spyder_sec_postings'
-const ADMIN_AUTH_KEY = 'spyder_sec_admin_auth'
-const ADMIN_PASSWORD = 'spyder@admin2026'
+const STORAGE_KEY = 'spyrewall_postings'
+const LEGACY_STORAGE_KEY = 'spyder_sec_postings'
+const ADMIN_AUTH_KEY = 'spyrewall_admin_auth'
+const LEGACY_ADMIN_AUTH_KEY = 'spyder_sec_admin_auth'
+const ADMIN_PASSWORD = 'spyrewall@admin2026'
+const LEGACY_ADMIN_PASSWORD = 'spyder@admin2026'
 
 function loadPostings() {
   try {
+    if (!localStorage.getItem(STORAGE_KEY) && localStorage.getItem(LEGACY_STORAGE_KEY)) {
+      localStorage.setItem(STORAGE_KEY, localStorage.getItem(LEGACY_STORAGE_KEY))
+      localStorage.removeItem(LEGACY_STORAGE_KEY)
+    }
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
   } catch {
     return []
@@ -25,7 +32,15 @@ const TABS = [
 ]
 
 export default function Admin() {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem(ADMIN_AUTH_KEY) === '1')
+  const [authed, setAuthed] = useState(() => {
+    if (sessionStorage.getItem(ADMIN_AUTH_KEY) === '1') return true
+    if (sessionStorage.getItem(LEGACY_ADMIN_AUTH_KEY) === '1') {
+      sessionStorage.setItem(ADMIN_AUTH_KEY, '1')
+      sessionStorage.removeItem(LEGACY_ADMIN_AUTH_KEY)
+      return true
+    }
+    return false
+  })
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [postings, setPostings] = useState([])
@@ -37,7 +52,7 @@ export default function Admin() {
 
   const handleLogin = (e) => {
     e.preventDefault()
-    if (password === ADMIN_PASSWORD) {
+    if (password === ADMIN_PASSWORD || password === LEGACY_ADMIN_PASSWORD) {
       sessionStorage.setItem(ADMIN_AUTH_KEY, '1')
       setAuthed(true)
       setError('')
