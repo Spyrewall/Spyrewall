@@ -15,6 +15,7 @@ export const COURSES = [
     modules: 12,
     provider: 'Spyrewall',
     icon: 'Monitor',
+    soldOut: true,
   },
   {
     id: 'cyber-fundamentals',
@@ -27,6 +28,7 @@ export const COURSES = [
     modules: 10,
     provider: 'Spyrewall',
     icon: 'Shield',
+    soldOut: false,
   },
   {
     id: 'programming-langs',
@@ -39,6 +41,7 @@ export const COURSES = [
     modules: 18,
     provider: 'Spyrewall',
     icon: 'Code',
+    soldOut: true,
   },
   {
     id: 'soc-analyst',
@@ -51,6 +54,7 @@ export const COURSES = [
     modules: 22,
     provider: 'Spyrewall',
     icon: 'Eye',
+    soldOut: true,
   },
   {
     id: 'penetration-testing',
@@ -63,6 +67,7 @@ export const COURSES = [
     modules: 28,
     provider: 'Spyrewall',
     icon: 'Crosshair',
+    soldOut: true,
   },
 ]
 
