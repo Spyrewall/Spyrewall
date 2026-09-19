@@ -41,6 +41,22 @@ export default function CPPSCourse() {
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
   const [toastMessage, setToastMessage] = useState(null)
 
+  useEffect(() => {
+    // Automatically register enrollment via /api/enroll on course load
+    const syncEnrollment = async () => {
+      try {
+        await fetch('/api/enroll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ learnerId: state.learnerId })
+        })
+      } catch (e) {
+        console.warn('API /api/enroll sync skipped:', e)
+      }
+    }
+    syncEnrollment()
+  }, [state.learnerId])
+
   const saveState = (newState) => {
     setState(prev => {
       const updated = { ...prev, ...newState }
@@ -296,7 +312,7 @@ export default function CPPSCourse() {
             </button>
             <div className="text-right">
               <span className="text-[hsl(0_0%_65%)] block">PROGRESS</span>
-              <span className="font-bold text-[hsl(217_91%_60%)]">{Math.round((doneCount() / 14) * 100)}% ({doneCount()}/14)</span>
+              <span className="font-bold text-[hsl(217_91%_60%)]">{Math.round((doneCount / 14) * 100)}% ({doneCount}/14)</span>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
-const { redis } = require('../lib/store');
-const { send, readBody, LEARNER_ID } = require('../lib/http');
-const KEY = require('../lib/answer-key');
+import { redis } from '../lib/store.js';
+import { send, readBody, LEARNER_ID } from '../lib/http.js';
+import KEY from '../lib/answer-key.js';
 
 const PASS_TOTAL = 50;      // % overall
 // Latin letters (incl. accents), spaces, dot, hyphen, apostrophe. The certificate font has no Devanagari.
@@ -24,7 +24,7 @@ function issueDate() {
   return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' }).format(new Date());
 }
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'Use POST.' });
   const body = readBody(req);
   const learnerId = body.learnerId || '';
@@ -56,4 +56,4 @@ module.exports = async (req, res) => {
   } catch (e) {
     send(res, 500, { result, error: 'Certificate could not be issued. Try again in a minute.' });
   }
-};
+}
