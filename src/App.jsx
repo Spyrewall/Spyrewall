@@ -16,6 +16,7 @@ import Footer from './components/Footer'
 import ChatBox from './components/ChatBox'
 import Cart from './components/Cart'
 import Checkout from './components/Checkout'
+import CPPSCourse from './components/CPPSCourse'
 
 function Home() {
   return (
@@ -49,6 +50,8 @@ export default function App() {
           <Route path="/admin" element={<PageWrapper><Admin /></PageWrapper>} />
           <Route path="/cart" element={<PageWrapper><Cart /></PageWrapper>} />
           <Route path="/checkout" element={<PageWrapper><Checkout /></PageWrapper>} />
+          <Route path="/cpps" element={<CPPSCourse />} />
+          <Route path="/learn/cpps" element={<CPPSCourse />} />
         </Routes>
       </main>
       <Footer />

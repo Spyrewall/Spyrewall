@@ -168,7 +168,7 @@ export default function Checkout() {
             </motion.div>
 
             <h1 className="text-3xl md:text-4xl font-display font-bold text-[hsl(0_0%_98%)] mb-2">
-              PAYMENT SUCCESSFUL
+              {paymentSuccess.amount === 0 ? 'ENROLLMENT SUCCESSFUL' : 'PAYMENT SUCCESSFUL'}
             </h1>
             <p className="font-mono text-sm tracking-widest text-[hsl(0_0%_65%)] mb-8">
               TRANSMISSION SECURE // ACCESS GRANTED
@@ -192,14 +192,14 @@ export default function Checkout() {
                 <span className="text-[hsl(0_0%_98%)] font-bold">{formatPrice(paymentSuccess.amount)}</span>
               </div>
               <div className="mt-2 flex justify-between items-center text-sm">
-                <span className="text-[hsl(0_0%_65%)] font-mono">TXN ID</span>
+                <span className="text-[hsl(0_0%_65%)] font-mono">TXN / ENROLL ID</span>
                 <span className="text-[hsl(0_0%_98%)] font-mono text-xs truncate max-w-[200px]">{paymentSuccess.paymentId}</span>
               </div>
             </div>
 
-            <Link to="/dashboard">
+            <Link to="/cpps">
               <button className="cyber-clip-button w-full sm:w-auto bg-[hsl(217_91%_60%)] hover:bg-[hsl(217_91%_50%)] text-[hsl(0_0%_98%)] px-8 py-4 font-mono font-bold tracking-widest transition-colors flex items-center justify-center gap-2 mx-auto">
-                GO TO DASHBOARD
+                START LEARNING NOW 🚀
                 <ArrowRight size={18} />
               </button>
             </Link>
