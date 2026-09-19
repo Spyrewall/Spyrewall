@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check, Lock, BookOpen, Award, ShieldCheck, Sparkles, FileText, ArrowRight, Download, RefreshCw, Printer } from 'lucide-react'
+import { CPPS_DATA } from '../data/cppsCourseData'
 
 const STORE_KEY = 'spyrewall-cpps:v1'
 const SERIAL_COUNTER_KEY = 'spyrewall-cpps:serial-counter'
@@ -14,7 +15,7 @@ export function getNextSequentialSerial() {
 }
 
 export default function CPPSCourse() {
-  const [data, setData] = useState(null)
+  const [data] = useState(CPPS_DATA)
   const [state, setState] = useState(() => {
     let s = {}
     try { s = JSON.parse(localStorage.getItem(STORE_KEY)) || {} } catch {}
@@ -29,19 +30,6 @@ export default function CPPSCourse() {
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
   const [toastMessage, setToastMessage] = useState(null)
 
-  useEffect(() => {
-    if (window.CPPS) {
-      setData(window.CPPS)
-    } else {
-      const script = document.createElement('script')
-      script.src = '/course-data.js'
-      script.onload = () => {
-        if (window.CPPS) setData(window.CPPS)
-      }
-      document.body.appendChild(script)
-    }
-  }, [])
-
   const saveState = (newState) => {
     setState(prev => {
       const updated = { ...prev, ...newState }
@@ -55,7 +43,7 @@ export default function CPPSCourse() {
     setTimeout(() => setToastMessage(null), 3000)
   }
 
-  if (!data) {
+  if (!data || !data.modules) {
     return (
       <div className="min-h-screen py-32 flex flex-col items-center justify-center bg-[hsl(0_0%_4%)] text-[hsl(0_0%_98%)]">
         <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4" />
