@@ -183,9 +183,13 @@ export default function Certifications() {
                       <>
                         <Check className="w-4 h-4" /> IN CART
                       </>
+                    ) : isFree ? (
+                      <>
+                        <Sparkles className="w-4 h-4" /> ENROLL FREE
+                      </>
                     ) : (
                       <>
-                        <ShoppingCart className="w-4 h-4" /> ENROLL FREE
+                        <ShoppingCart className="w-4 h-4" /> ADD TO CART
                       </>
                     )}
                   </button>
