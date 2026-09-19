@@ -84,6 +84,21 @@ export default function Checkout() {
 
     setIsProcessing(true);
 
+    // Free enrollment bypass (Razorpay minimum is ₹1)
+    if (totalPrice === 0) {
+      setTimeout(() => {
+        setIsProcessing(false);
+        setPaymentSuccess({
+          paymentId: 'FREE_ENROLLMENT_' + Date.now(),
+          orderId: 'FREE_ORDER_' + Date.now(),
+          amount: 0,
+          itemsPurchased: [...items]
+        });
+        clearCart();
+      }, 600);
+      return;
+    }
+
     const res = await loadRazorpayScript();
     if (!res) {
       alert('Razorpay SDK failed to load. Are you online?');
@@ -337,7 +352,7 @@ export default function Checkout() {
                   ) : (
                     <>
                       <Lock size={20} />
-                      PAY {formatPrice(totalPrice)}
+                      {totalPrice === 0 ? 'CLAIM FREE ENROLLMENT' : `PAY ${formatPrice(totalPrice)}`}
                     </>
                   )}
                 </button>
