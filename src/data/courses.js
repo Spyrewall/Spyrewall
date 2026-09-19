@@ -31,6 +31,20 @@ export const COURSES = [
     soldOut: false,
   },
   {
+    id: 'phishing-prevention',
+    name: 'Certified Phishing Prevention Specialist',
+    description: 'Master email security, spear phishing detection, credential harvesting defense, payload analysis, and enterprise anti-phishing controls.',
+    price: 0,
+    originalPrice: 999,
+    duration: '2 Weeks',
+    level: 'Beginner',
+    modules: 8,
+    provider: 'Spyrewall',
+    icon: 'Mail',
+    soldOut: false,
+    isFree: true,
+  },
+  {
     id: 'programming-langs',
     name: 'Programming Languages',
     description: 'Learn essential programming languages used in cybersecurity and ethical hacking — Python, Bash, and C for exploit development.',
@@ -79,8 +93,9 @@ export function getCourseById(id) {
 }
 
 /**
- * Format price in INR with ₹ symbol and commas.
+ * Format price in INR with ₹ symbol and commas, or 'FREE' if 0.
  */
 export function formatPrice(amount) {
+  if (amount === 0) return 'FREE'
   return '₹' + amount.toLocaleString('en-IN')
 }

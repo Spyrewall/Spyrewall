@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { BadgeCheck, ShoppingCart, Check, Clock, BookOpen, BarChart3, Ban } from 'lucide-react'
+import { BadgeCheck, ShoppingCart, Check, Clock, BookOpen, BarChart3, Ban, Sparkles } from 'lucide-react'
 import { COURSES, formatPrice } from '../data/courses'
 import { useCart } from '../context/CartContext'
 
@@ -29,7 +29,8 @@ export default function Certifications() {
           {COURSES.map((cert, i) => {
             const inCart = isInCart(cert.id)
             const isSoldOut = cert.soldOut
-            const discount = Math.round(((cert.originalPrice - cert.price) / cert.originalPrice) * 100)
+            const isFree = cert.price === 0 || cert.isFree
+            const discount = cert.originalPrice > 0 ? Math.round(((cert.originalPrice - cert.price) / cert.originalPrice) * 100) : 0
             
             return (
               <motion.div
@@ -41,14 +42,19 @@ export default function Certifications() {
                 className="cyber-clip p-6 transition-all duration-300 group flex flex-col h-full relative"
                 style={{
                   backgroundColor: 'hsl(0 0% 4%)',
-                  border: isSoldOut ? '1px solid hsl(0 0% 15%)' : '1px solid hsl(0 0% 15%)',
+                  border: isFree
+                    ? '1px solid hsl(142 71% 45% / 0.4)'
+                    : isSoldOut
+                    ? '1px solid hsl(0 0% 15%)'
+                    : '1px solid hsl(0 0% 15%)',
                   opacity: isSoldOut ? 0.85 : 1,
+                  boxShadow: isFree ? '0 0 20px rgba(34, 197, 94, 0.08)' : 'none',
                 }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = isSoldOut ? 'hsl(0 70% 50% / 0.4)' : 'hsl(217 91% 60% / 0.5)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = 'hsl(0 0% 15%)'}
+                onMouseEnter={e => e.currentTarget.style.borderColor = isFree ? 'hsl(142 71% 45% / 0.8)' : isSoldOut ? 'hsl(0 70% 50% / 0.4)' : 'hsl(217 91% 60% / 0.5)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = isFree ? 'hsl(142 71% 45% / 0.4)' : 'hsl(0 0% 15%)'}
               >
-                {/* Sold out overlay tag */}
-                {isSoldOut && (
+                {/* Sold out or Free tag */}
+                {isSoldOut ? (
                   <div className="absolute top-4 right-4 z-10">
                     <span
                       className="inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1"
@@ -61,17 +67,30 @@ export default function Certifications() {
                       <Ban className="w-3 h-3" /> SOLD OUT
                     </span>
                   </div>
-                )}
+                ) : isFree ? (
+                  <div className="absolute top-4 right-4 z-10">
+                    <span
+                      className="inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 animate-pulse"
+                      style={{
+                        backgroundColor: 'hsl(142 71% 45% / 0.15)',
+                        color: 'hsl(142 71% 45%)',
+                        border: '1px solid hsl(142 71% 45% / 0.5)',
+                      }}
+                    >
+                      <Sparkles className="w-3 h-3" /> FREE COURSE
+                    </span>
+                  </div>
+                ) : null}
 
                 <div className="flex items-start gap-4 mb-6">
                   <div
                     className="w-12 h-12 flex items-center justify-center rounded-full shrink-0 transition-all duration-300"
                     style={{
-                      backgroundColor: isSoldOut ? 'hsl(0 0% 15%)' : 'hsl(217 91% 60% / 0.1)',
-                      border: isSoldOut ? '1px solid hsl(0 0% 25%)' : '1px solid hsl(217 91% 60% / 0.3)',
+                      backgroundColor: isFree ? 'hsl(142 71% 45% / 0.1)' : isSoldOut ? 'hsl(0 0% 15%)' : 'hsl(217 91% 60% / 0.1)',
+                      border: isFree ? '1px solid hsl(142 71% 45% / 0.3)' : isSoldOut ? '1px solid hsl(0 0% 25%)' : '1px solid hsl(217 91% 60% / 0.3)',
                     }}
                   >
-                    <BadgeCheck className="w-6 h-6" style={{ color: isSoldOut ? 'hsl(0 0% 50%)' : 'hsl(217 91% 60%)' }} />
+                    <BadgeCheck className="w-6 h-6" style={{ color: isFree ? 'hsl(142 71% 45%)' : isSoldOut ? 'hsl(0 0% 50%)' : 'hsl(217 91% 60%)' }} />
                   </div>
                   <div className="pr-16">
                     <h3 className="font-display font-bold uppercase tracking-wide mb-2 text-sm" style={{ color: isSoldOut ? 'hsl(0 0% 80%)' : 'hsl(0 0% 98%)' }}>
@@ -100,9 +119,9 @@ export default function Certifications() {
                     <span
                       className="inline-block text-[10px] font-mono uppercase tracking-widest px-2 py-1"
                       style={{
-                        backgroundColor: isSoldOut ? 'hsl(0 0% 15%)' : 'hsl(217 91% 60% / 0.1)',
-                        color: isSoldOut ? 'hsl(0 0% 60%)' : 'hsl(217 91% 60%)',
-                        border: isSoldOut ? '1px solid hsl(0 0% 25%)' : '1px solid hsl(217 91% 60% / 0.3)',
+                        backgroundColor: isFree ? 'hsl(142 71% 45% / 0.1)' : isSoldOut ? 'hsl(0 0% 15%)' : 'hsl(217 91% 60% / 0.1)',
+                        color: isFree ? 'hsl(142 71% 45%)' : isSoldOut ? 'hsl(0 0% 60%)' : 'hsl(217 91% 60%)',
+                        border: isFree ? '1px solid hsl(142 71% 45% / 0.3)' : isSoldOut ? '1px solid hsl(0 0% 25%)' : '1px solid hsl(217 91% 60% / 0.3)',
                       }}
                     >
                       {cert.provider}
@@ -111,14 +130,14 @@ export default function Certifications() {
                       {discount > 0 && (
                         <div className="flex items-center gap-2 justify-end mb-0.5">
                           <span className="text-[10px] line-through" style={{ color: 'hsl(0 0% 40%)' }}>
-                            {formatPrice(cert.originalPrice)}
+                            ₹{cert.originalPrice}
                           </span>
                           <span className="text-[9px] font-bold px-1 py-0.5 rounded-sm" style={{ backgroundColor: 'hsl(142 71% 45% / 0.1)', color: 'hsl(142 71% 45%)' }}>
                             {discount}% OFF
                           </span>
                         </div>
                       )}
-                      <span className="text-lg font-bold font-mono" style={{ color: isSoldOut ? 'hsl(0 0% 60%)' : 'hsl(0 0% 98%)' }}>
+                      <span className="text-lg font-bold font-mono" style={{ color: isFree ? 'hsl(142 71% 45%)' : isSoldOut ? 'hsl(0 0% 60%)' : 'hsl(0 0% 98%)' }}>
                         {formatPrice(cert.price)}
                       </span>
                     </div>
@@ -133,10 +152,14 @@ export default function Certifications() {
                         ? 'hsl(0 0% 12%)'
                         : inCart
                         ? 'hsl(142 71% 45% / 0.1)'
+                        : isFree
+                        ? 'hsl(142 71% 45% / 0.15)'
                         : 'hsl(217 91% 60% / 0.1)',
                       color: isSoldOut
                         ? 'hsl(0 0% 50%)'
                         : inCart
+                        ? 'hsl(142 71% 45%)'
+                        : isFree
                         ? 'hsl(142 71% 45%)'
                         : 'hsl(217 91% 60%)',
                       border: `1px solid ${
@@ -144,6 +167,8 @@ export default function Certifications() {
                           ? 'hsl(0 0% 20%)'
                           : inCart
                           ? 'hsl(142 71% 45% / 0.3)'
+                          : isFree
+                          ? 'hsl(142 71% 45% / 0.4)'
                           : 'hsl(217 91% 60% / 0.3)'
                       }`,
                       cursor: isSoldOut || inCart ? 'not-allowed' : 'pointer',
@@ -160,7 +185,7 @@ export default function Certifications() {
                       </>
                     ) : (
                       <>
-                        <ShoppingCart className="w-4 h-4" /> ADD TO CART
+                        <ShoppingCart className="w-4 h-4" /> ENROLL FREE
                       </>
                     )}
                   </button>
