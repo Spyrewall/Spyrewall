@@ -3,12 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Check, Lock, BookOpen, Award, ShieldCheck, Sparkles, FileText, ArrowRight, Download, RefreshCw, Printer } from 'lucide-react'
 
 const STORE_KEY = 'spyrewall-cpps:v1'
+const SERIAL_COUNTER_KEY = 'spyrewall-cpps:serial-counter'
 const LAST_LESSON = 13
 
-export function generateUniqueSerial() {
-  const num = Math.floor(100000 + Math.random() * 900000)
-  const salt = Math.random().toString(36).substring(2, 6).toUpperCase()
-  return `Spyrewall/CPPS/${num}-${salt}`
+export function getNextSequentialSerial() {
+  let current = parseInt(localStorage.getItem(SERIAL_COUNTER_KEY) || '0', 10)
+  current += 1
+  localStorage.setItem(SERIAL_COUNTER_KEY, String(current))
+  return `Spyrewall/CPPS/${String(current).padStart(3, '0')}`
 }
 
 export default function CPPSCourse() {
@@ -97,7 +99,7 @@ export default function CPPSCourse() {
     }
   }
 
-  // Issue Certificate with Guaranteed Unique Serial Number
+  // Issue Certificate with Sequential Serial Number (Spyrewall/CPPS/001, 002, 003...)
   const handleIssueCertificate = () => {
     if (!studentName.trim()) {
       alert('Please enter your full name for the certificate.')
@@ -105,17 +107,17 @@ export default function CPPSCourse() {
     }
 
     const todayStr = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date())
-    const uniqueSerial = generateUniqueSerial()
+    const nextSerial = getNextSequentialSerial()
 
     const certObj = {
       name: studentName.trim(),
-      serial: uniqueSerial,
+      serial: nextSerial,
       date: todayStr,
       issuedAt: new Date().toISOString()
     }
 
     saveState({ cert: certObj, xp: state.xp + 200 })
-    showToast(`Certificate Issued! Serial: ${uniqueSerial}`)
+    showToast(`Certificate Issued! Serial: ${nextSerial}`)
   }
 
   const handleDownloadCertificate = async () => {
@@ -218,7 +220,7 @@ export default function CPPSCourse() {
             <Award className="w-16 h-16 text-[hsl(217_91%_60%)] mx-auto mb-4" />
             <h2 className="text-2xl font-display font-bold uppercase mb-2">Spyrewall CPPS Certificate</h2>
             <p className="text-xs font-mono text-[hsl(0_0%_65%)] mb-8">
-              Issue your official Certified Phishing Prevention Specialist credential with a unique verified serial number.
+              Issue your official Certified Phishing Prevention Specialist credential with a sequential serial number.
             </p>
 
             {state.cert ? (
@@ -228,7 +230,7 @@ export default function CPPSCourse() {
                   <span className="font-bold text-sm text-[hsl(0_0%_98%)]">{state.cert.name}</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-[hsl(0_0%_15%)] pb-3">
-                  <span className="text-xs font-mono text-[hsl(0_0%_60%)]">UNIQUE SERIAL NO.</span>
+                  <span className="text-xs font-mono text-[hsl(0_0%_60%)]">SERIAL NO.</span>
                   <span className="font-mono font-bold text-xs text-[hsl(217_91%_60%)] bg-[hsl(217_91%_60%/0.1)] px-2.5 py-1 border border-[hsl(217_91%_60%/0.3)] rounded">
                     {state.cert.serial}
                   </span>
@@ -265,7 +267,7 @@ export default function CPPSCourse() {
                   onClick={handleIssueCertificate}
                   className="cyber-clip-button w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-mono font-bold text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-2"
                 >
-                  <Sparkles className="w-5 h-5" /> Issue My Unique Certificate
+                  <Sparkles className="w-5 h-5" /> Issue Certificate (Sequential Serial)
                 </button>
               </div>
             )}
