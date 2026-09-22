@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { BadgeCheck, ShoppingCart, Check, Clock, BookOpen, BarChart3, Ban, Sparkles } from 'lucide-react'
 import { COURSES, formatPrice } from '../data/courses'
 import { useCart } from '../context/CartContext'
 
 export default function Certifications() {
   const { addItem, isInCart } = useCart()
+  const navigate = useNavigate()
 
   return (
     <section id="certifications" className="py-24 relative overflow-hidden" style={{ backgroundColor: 'hsl(0 0% 12%)' }}>
@@ -144,8 +146,13 @@ export default function Certifications() {
                   </div>
 
                   <button
-                    onClick={() => !isSoldOut && !inCart && addItem(cert)}
-                    disabled={isSoldOut || inCart}
+                    onClick={() => {
+                      if (!isSoldOut) {
+                        if (!inCart) addItem(cert)
+                        navigate('/cart')
+                      }
+                    }}
+                    disabled={isSoldOut}
                     className="w-full py-3 px-4 flex items-center justify-center gap-2 cyber-clip-button font-mono uppercase tracking-widest text-xs transition-all duration-300"
                     style={{
                       backgroundColor: isSoldOut
@@ -171,8 +178,8 @@ export default function Certifications() {
                           ? 'hsl(142 71% 45% / 0.4)'
                           : 'hsl(217 91% 60% / 0.3)'
                       }`,
-                      cursor: isSoldOut || inCart ? 'not-allowed' : 'pointer',
-                      opacity: isSoldOut ? 0.6 : inCart ? 0.8 : 1,
+                      cursor: isSoldOut ? 'not-allowed' : 'pointer',
+                      opacity: isSoldOut ? 0.6 : 1,
                     }}
                   >
                     {isSoldOut ? (
